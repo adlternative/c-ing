@@ -20,8 +20,43 @@
 #include<map>
 #include<set>
 #include<utility>
+#include<unordered_set>
+#include<unordered_map>
+#include<memory>
+#include<cstring>
 using namespace std;
 using namespace std::placeholders;
+vector<int>*funcc(){
+    return new vector<int>;
+}
+shared_ptr<vector<int>>fun(){
+    return make_shared<vector<int>>();
+}
+shared_ptr<vector<int>>funnnn(shared_ptr<vector<int>>v)
+{
+     int i;
+    while(cin>>i){
+        // cout<<">";
+        if(i==-1)
+            break;
+        else{ 
+            v->push_back(i);
+            // cout<<i;
+        }
+    }
+    return v;   
+}
+vector<int>*funcccc(vector<int>*v)
+{
+    int i;
+    while(cin>>i){
+        if(i==-1)
+            break;
+        else 
+            v->push_back(i);
+    }
+    return v;
+}
 pair<string,int>process(vector<string>&v){
     if(!v.empty()){
         // return {v.back(),v.back().size()};
@@ -53,13 +88,216 @@ bool big_than_five(const string&s,int sz)
     return false;
 }
 
+size_t hasher(const Sales_data&sd)
+{
+    return hash<string>()(sd.isbn());
+}
+bool eqOp(const Sales_data&lhs,const Sales_data&rhs)
+{
+    return lhs.isbn()==rhs.isbn();
+}
+using SD_multimet =unordered_multiset<Sales_data,decltype(hasher)*,decltype(eqOp)*>;
+void process(shared_ptr<int>ptr)
+{
+    cout<<"process"<<ptr.use_count()<<endl;
+    cout<<*ptr<<endl;
+}
+
 int main()
-{   
-    vector<string>v;
-    multiset<string>c;
-    map<string,string>m;
-    auto s=c.insert(c.begin(),{"s"});
-    auto q=m.insert(m.begin(),{"s","S"});
+{
+    int n=4;
+    // allocator<string>alloc;
+    // auto const p=alloc.allocate(n);
+    // auto q=p;
+    // alloc.construct(q++);
+    // alloc.construct(q++,10,'c');
+    // alloc.construct(q++,"hi");
+    // // q=p;
+    // // cout<<*q++;    
+    // cout<<*p<<endl;
+    // // string* p=new string[3];
+    // while(q!=p)
+    //     alloc.destroy(--q);
+
+    string s;
+    allocator<string>a;
+    auto const p=a.allocate(n);
+    auto q=p;
+    while(cin>>s&&q!=p+n){
+        *q++=s;
+    }
+    const size_t size=q-p;
+    q=p;
+    for(size_t i=0;i<size;i++){
+        cout<<*q++;
+    }
+    
+    // string*q=p;
+    // while(cin>>s&&q!=p+3){
+    //     *q++=s;
+    // }
+    // const size_t size=q-p;
+    // q=p;
+    // for(size_t i=0;i<size;i++){
+    //     cout<<*q++;
+    // }
+    // delete[]p;
+    // allocator<int>alloc;
+    // // auto const p=alloc.allocate(4);
+    // vector<int>vi(3,3);
+    // auto p=alloc.allocate(vi.size()*2);
+    // auto q=uninitialized_copy(vi.begin(),vi.end(),p);
+    // uninitialized_fill_n(q,vi.size(),42);
+    // for(int i=0;i<3;i++){
+    //     cout<<*p++<<endl;
+    // }
+    // auto q=p;
+    // alloc.construct(q++,10,'s');
+    // // cout<<*(q--)<<endl;
+    // alloc.construct(q++,10,'c');
+    // // cout<<*q--<<endl;
+    // alloc.construct(q++,"hi");
+    // // cout<<*q--<<endl;
+    // while(q!=p)
+    //     alloc.destroy(--q);
+    // alloc.deallocate(p,4);
+    
+    // cout<<*p<<endl;
+    // string s1="Sad",s2="BOy";
+    // char s3[]="sad",s4[]="boy";
+    // int  l3=strlen(s3);int l4=strlen(s4);
+    // int len=strlen(s3)+strlen(s4)+1;
+    // char *p=new char[len];
+    // p=strcat(s3,s4);
+    // printf("%s",p);
+    // string*pp=new string[1];
+    // string str;
+    // cin>>str;
+    // // cout<<str.size();
+    
+    // char*pp=new char[str.size()+1];
+    // strcpy(pp,str.c_str());
+    // printf("%s",pp);
+
+    // auto p=make_shared<int>(42);
+    // // weak_ptr<int>wp(p);
+    // weak_ptr<int>wp;
+    // if(shared_ptr<int>np=wp.lock()){
+    //     cout<<"!"<<*p;
+    // }else{
+    //     cout<<"?";
+    //     np.reset(new int(12));
+    //     wp=np;
+    //     cout<<wp.use_count()<<endl;
+    //     cout<<wp.expired();
+        
+    // }
+    // int*x(new int(1024));
+    // process(shared_ptr<int>(x));
+    // // cout<<"process"<<x.use_count()<<endl;
+    // cout<<*x;
+
+    // shared_ptr<int>p(new int(42));
+    // process(shared_ptr<int>(p));
+    // cout<<"process"<<p.use_count()<<endl;
+    // delete p.get();
+
+    // shared_ptr<int>pp(new int(42));
+    // process(shared_ptr<int>(pp.get()));
+
+    // cout<<"process"<<p.use_count()<<endl;
+    // cout<<*p<<endl;
+    // auto a=new auto(1);
+    // int *p2=new(nothrow)int;
+    // auto p=make_shared<int>(42);
+    // weak_ptr<int>wp(p);
+    // if(shared_ptr<int>np=wp.lock()){
+
+    // }
+    // int *q=new int(42),*r=new int(100);
+    // r=q;
+    // auto q2=make_shared<int>(42),
+    // r2=make_shared<int>(100);
+    // r2=q2;
+    // shared_ptr<double>p1;
+    // shared_ptr<int>p2(new int(42));
+    // vector<int>*pivec=funcc();
+    // auto f=funcccc(pivec);
+    // auto pivecc=fun();
+    // auto ff=funnnn(pivecc);
+    // for(auto&i:*ff){
+    //     cout<<i<<endl;
+    // }
+    // delete f;
+    // int*pi=new int(1024);
+    // string *ps=new string(10,'9');
+    // vector<int>*pv=new vector<int>{0,1,2,3,4,5,6,7,8,9};
+    // string*ps1=new string;
+    // int*pi1=new int;
+    // int*pi2=new int();
+    // int obj;
+    // // auto p2=new auto{1,2,3};
+    // // const int(0);
+    // int*p(new int(42));
+    // auto q=p;
+    // delete p;
+    // p=nullptr;
+    // int *p1=new int;
+    // int *p2=new(nothrow)int;
+    // // delete p1;
+    // const int *pci=new const int(1024);
+    // const string *pcs=new const string;
+    // auto p1=new auto(obj);
+    // int i,*pi1=&i,*pi2=nullptr;
+    // double* pd=new double (33),*pd2=pd;
+    // StrBlob b1;
+    // {
+    //     StrBlob b2={"a","b","c"};
+    //     b1=b2;
+    //     b2.push_back("about");
+    //     cout<<b2.size()<<" "<<b1.size()<<endl;
+    // }
+    // cout<<" "<<b1.size()<<endl;
+
+    // shared_ptr<string>p1;
+    // shared_ptr<list<int>>p2;
+    // if(p1&&p1->empty())
+    //     *p1="hi";
+    // shared_ptr<int>p3=make_shared<int>(42);
+    // shared_ptr<string>p4=make_shared<string>(10,'9');
+    // shared_ptr<int>p5=make_shared<int>();
+    // auto p6=make_shared<vector<string>>();
+    // auto p=make_shared<int>(42);
+    // auto q(p);
+    //     shared_ptr<int> r;
+    //     r=make_shared<int>(41);
+    //     cout<<r.use_count()<<" "<<*r<<" ";
+    //           // r=q;
+    
+    // cout<<r.use_count()<<" "<<*r<<" ";
+    // cout<<q.use_count()<<" "<<*q<<" ";
+    // cout<<p.use_count()<<" "<<*p<<" ";
+    // SD_multimet bookstore(42,hasher,eqOp);
+    // map<string,vector<int>>m;
+    // m["DSA"]={1,2,4};
+    // auto kk=m.insert({"ads",{1,2,3}});
+    // auto s=kk.first->first;
+    // auto size=m.erase(string("DSA"));
+    // auto pp=m.erase(kk.first);
+    // auto ppp=m.erase(m.begin(),m.end());
+    // for(const auto& i:m){
+    //     for(const auto& p:i.second)
+    //         cout<<p<<" ";
+    // }
+    // vector<string>v;
+    // multiset<string>c;
+    // set<string>ss;
+    // auto p=ss.insert(string("ss"));
+    // auto sss=ss.insert(ss.begin(),{"s"});    
+    // map<string,string>m;
+    // auto r=m.insert({"ss","ss"});
+    // auto s=c.insert(c.begin(),{"s"});
+    // auto q=m.insert(m.begin(),{"s","S"});
     // copy(v.begin(),v.end(),inserter(c,c.end()));
     // // copy(v.begin(),v.end(),back_inserter(c));
     // copy(c.begin(),c.end(),inserter(v,v.end()));
