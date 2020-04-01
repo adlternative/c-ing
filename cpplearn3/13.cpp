@@ -2,6 +2,7 @@
 #include<fstream>
 #include<sstream>
 #include <string>
+#include<cstring>
 #include<cassert>
 #include <vector>
 // #include"../cpplearn2/Sales_data.h"
@@ -26,75 +27,82 @@
 #include"./测试5.cpp"
 using namespace std;
 using namespace std::placeholders;
-class StrVec
+using line_no =vector<string>::size_type;
+class String
 {
 private:
-    /*static*/ allocator<string>alloc;
-    void chk_n_alloc(){if(size()>=capacity())reallocate();}
-    pair<string*,string*>alloc_n_copy(const string*,const string*);
+    using size_type =size_t;
+    allocator<char>alloc;
+    void chk_n_alloc(){if(size()>=capacity())reallocate();/*cout<<size()<<" "<<capacity()<<endl;*/}
+    pair<char*,char*>alloc_n_copy(const char*,const char*);
     void free();
     void reallocate();
-    string*elements;
-    string*first_free;
-    string*cap;
-public:
-    void reserve(string::size_type);
-    void resize(string::size_type);
-    StrVec():elements(nullptr),first_free(nullptr),cap(nullptr){}
-    StrVec(const StrVec&);
-    StrVec(initializer_list<string>ls):elements(nullptr),first_free(nullptr),cap(nullptr){
-        for(auto i:ls){
-            push_back(i);
+    char*elements;
+    char*first_free;
+    char*cap;
+public:   
+    void reserve(String::size_type);
+    void resize(String::size_type);
+    String():elements(nullptr),first_free(nullptr),cap(nullptr){}
+    String(const char*cc):elements(nullptr),first_free(nullptr),cap(nullptr){
+        for(size_type i=0;i!=strlen(cc);i++){
+            // cout<<"!"<<endl;
+            push_back(cc[i]);
         }
     }
-    StrVec&operator=(const StrVec&);
-    ~StrVec();
-    void push_back(const string&);
-    size_t size()const {return first_free-elements;}
-    size_t capacity()const {return cap-elements;}
-    string*begin()const{return elements;}
-    string *end()const {return first_free;}
-
+    String(const String&);
+    String(initializer_list<char>ls):elements(nullptr),first_free(nullptr),cap(nullptr){
+        for(auto i:ls)
+            push_back(i);
+    }
+String&operator=(const String&);
+~String();
+void push_back(const char&);
+size_t size()const{return first_free-elements;}
+size_t capacity()const{return cap-elements;}
+char* begin()const{return elements;}
+char* end()const{return first_free;}
 };
-pair<string*,string*>StrVec::alloc_n_copy(const string*b,const string*e)
+pair<char*,char*>String::alloc_n_copy(const char*b,const char*e)
 {
     auto data=alloc.allocate(e-b);
     return {data,uninitialized_copy(b,e,data)};
 }
-void StrVec::free()
+
+void String::free()
 {
     if(elements){
-        // for(auto p=first_free;p!=elements;)
-        //     alloc.destroy(--p);
-        
-        for_each(elements,first_free,[&](const string p){alloc.destroy(&p);});
+        for_each(elements,first_free,[&](const char p){alloc.destroy(&p);});
         alloc.deallocate(elements,cap-elements);
     }
 }
-StrVec::StrVec(const StrVec &s)
+String::String(const String&s)
 {
     auto newdata=alloc_n_copy(s.begin(),s.end());
     elements=newdata.first;
     first_free=cap=newdata.second;
+    cout<<"拷贝构造"<<endl;    
 }
-StrVec&StrVec::operator=(const StrVec&rhs)
+
+String&String::operator=(const String &rhs)
 {
     auto data=alloc_n_copy(rhs.begin(),rhs.end());
     free();
     elements=data.first;
     first_free=cap=data.second;
+    cout<<"拷贝赋值"<<endl;
     return *this;
 }
-StrVec::~StrVec(){free();}
-void StrVec::push_back(const string&s)
+String::~String(){free();}
+void String::push_back(const char&c)
 {
     chk_n_alloc();
-    alloc.construct(first_free++,s);
+    alloc.construct(first_free++,c);
 }
-void StrVec::reallocate()
+
+void String::reallocate()
 {
     auto newcapacity=(size()>0)?size()*2:1;
-    // cout<<size()<<" "<<newcapacity<<endl;
     auto newdata=alloc.allocate(newcapacity);
     auto dest=newdata;
     auto elem=elements;
@@ -105,7 +113,7 @@ void StrVec::reallocate()
     first_free=dest;
     cap=elements+newcapacity;
 }
-void StrVec::reserve(string::size_type n)
+void String::reserve(String::size_type n)
 {
     
     if(n<=capacity()){
@@ -127,7 +135,7 @@ void StrVec::reserve(string::size_type n)
     first_free=dest;
     cap=elements+newcapacity;
 }
-void StrVec::resize(string::size_type n)
+void String::resize(String::size_type n)
 {
     if(n<size()){
         if(n<0){
@@ -147,30 +155,32 @@ void StrVec::resize(string::size_type n)
         first_free=dest;
         cap=elements+newcapacity;
         while(size()<n){
-                alloc.construct(first_free++,string());
+                alloc.construct(first_free++,0);
         }
     }else{
         while(size()<n){
-                    alloc.construct(first_free++,string());
+                    alloc.construct(first_free++,0);
             }
     }
 }
 
-
-// int main()
-// {
-//     StrVec s;
-//     s.push_back("da");
-//     s.push_back("da");
-//     cout<<s.size()<<s.capacity()<<endl;
-//     s.reserve(10);
-//     cout<<s.size()<<s.capacity()<<endl;
-//     s.resize(11);
-//     cout<<s.size()<<s.capacity()<<endl;
-//     vector<int>v(2,2);
-//     cout<<v.size()<<v.capacity()<<endl;
-//    v.reserve(10);
-//     cout<<v.size()<<v.capacity()<<endl;
-//     v.resize(11);   
-//     cout<<v.size()<<v.capacity()<<endl;
-// }
+ostream&operator<<(ostream& os,const String&s){
+    for(auto i:s){
+        os<<i;
+    }
+    return os;
+}
+int main()
+{
+    String  s("sad");
+    String  s1("ssad");
+    String  s2("ssad");
+    // s.push_back('c');
+    vector<String>v;
+    v.push_back(s);
+    v.push_back(s1);    
+    v.push_back(s2);    
+    v.push_back(s2);    
+    v.push_back(s2);    
+    v.push_back(s2);    
+}
