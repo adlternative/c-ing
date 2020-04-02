@@ -41,9 +41,17 @@ private:
     char*first_free;
     char*cap;
 public:   
+    friend  bool operator!=(const String &lhs,const String &rhs);
+    friend  bool operator==(const String &lhs,const String &rhs);
+    friend  bool operator<(const String &lhs,const String &rhs);
+    friend  bool operator>(const String &lhs,const String &rhs);
+    char& operator[](size_type n){ return elements[n];}
+    const char&operator[](size_type n)const{return elements[n];}
+    
     void reserve(String::size_type);
     void resize(String::size_type);
     String():elements(nullptr),first_free(nullptr),cap(nullptr){}
+    //注意这里的构造函数若没把指针初始化会出错
     String(const char*cc):elements(nullptr),first_free(nullptr),cap(nullptr){
         for(size_type i=0;i!=strlen(cc);i++){
             // cout<<"!"<<endl;
@@ -51,11 +59,13 @@ public:
         }
     }
     String(const String&);
+    String(String&&)noexcept;
     String(initializer_list<char>ls):elements(nullptr),first_free(nullptr),cap(nullptr){
         for(auto i:ls)
             push_back(i);
     }
 String&operator=(const String&);
+String&operator=(String&&);
 ~String();
 void push_back(const char&);
 size_t size()const{return first_free-elements;}
@@ -76,6 +86,12 @@ void String::free()
         alloc.deallocate(elements,cap-elements);
     }
 }
+String::String(String&&s)noexcept:elements(s.elements),first_free(s.first_free),cap(s.cap)
+{
+    s.elements=s.first_free=s.cap=nullptr;
+    puts("String(String&&s)构造");
+}
+
 String::String(const String&s)
 {
     auto newdata=alloc_n_copy(s.begin(),s.end());
@@ -83,7 +99,56 @@ String::String(const String&s)
     first_free=cap=newdata.second;
     cout<<"拷贝构造"<<endl;    
 }
+bool operator!=(const String &lhs,const String &rhs)
+{
+    return !(lhs==rhs);   
+}
+bool operator==(const String &lhs,const String &rhs)
+{
+    if(lhs.size()!=rhs.size())
+        return false;
+    for(auto i=lhs.begin(),j=rhs.begin();i!=lhs.end(),j!=rhs.end();i++,j++){
+        if((*i)!=(*j)) 
+            return false;
+        
+    }
+    return true;
+}
+bool operator<(const String &lhs,const String &rhs)
+{
+    auto i=lhs.begin(),j=rhs.begin();
+    for(;i!=lhs.end(),j!=rhs.end();i++,j++){
+        if((*i)>=(*j)) 
+            return false;    
+    }
+    if(j==rhs.end())//lhs更长
+        return false;
+    return true;
+}
+bool operator>(const String &lhs,const String &rhs)
+{
+    auto i=lhs.begin(),j=rhs.begin();
+    for(;i!=lhs.end(),j!=rhs.end();i++,j++){
+        if((*i)<=(*j)) 
+            return false;    
+    }
+    if(j==lhs.end())//rhs更长
+        return false;
+    return true;
+}
 
+String&String::operator=(String&&rhs)
+{
+     puts("String::operator=");   
+    if(&rhs!=this){
+        free();
+        elements=rhs.elements;
+        first_free=rhs.first_free;
+        cap=rhs.cap;
+        rhs.elements=rhs.first_free=rhs.cap=nullptr;
+    }
+    return *this;
+}
 String&String::operator=(const String &rhs)
 {
     auto data=alloc_n_copy(rhs.begin(),rhs.end());
@@ -175,12 +240,23 @@ int main()
     String  s("sad");
     String  s1("ssad");
     String  s2("ssad");
-    // s.push_back('c');
+    s.push_back('c');
     vector<String>v;
+    vector<String>v2;
     v.push_back(s);
-    v.push_back(s1);    
-    v.push_back(s2);    
-    v.push_back(s2);    
-    v.push_back(s2);    
-    v.push_back(s2);    
+    vector<string>v3;
+    vector<string>v4;
+    v3.push_back(string("sad"));
+    // if(v3>v4)cout<<"??";
+    // cout<<*v[0].begin()<<endl;
+    v2.push_back(s);
+    // cout<<*v2[0].begin()<<endl;
+    if(v==v2)cout<<"!!";
+    if(string("asd")<string("d"))cout<<"``";
+    // v.push_back(s1);    
+    // v.push_back(s2);    
+    // v.push_back(s2);    
+    // v.push_back(s2);    
+    // v.push_back(s2);    
+    cout<<s;
 }

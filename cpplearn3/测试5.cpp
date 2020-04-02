@@ -31,15 +31,22 @@ class ConstStrBlobPtr;
 class StrBlob;
 class StrBlob{
 public:
+    friend bool operator==(StrBlob&rhs,StrBlob&lhs);
+    friend bool operator!=(StrBlob&rhs,StrBlob&lhs);
+    friend bool operator<(StrBlob&rhs,StrBlob&lhs);
+    friend bool operator>(StrBlob&rhs,StrBlob&lhs);
     friend class StrBlobPtr;
     friend class ConstStrBlobPtr;
     typedef vector<string>::size_type size_type;
     StrBlob():data(make_shared<vector<string>>()){}
     StrBlob(initializer_list<string>i1):data(make_shared<vector<string>>(i1)){}
     StrBlob(const StrBlob&rhs):data(make_shared<vector<string>>(*rhs.data)){}
+    string& operator[](size_type n){return (*data)[n];}
+    const string&operator[](size_type n)const{return (*data)[n];}
     size_type size()const {return data->size();}
     bool empty()const {return data->empty();}
     void  push_back(const string &t){data->push_back(t);}
+    void push_back(string&&t){data->push_back(t);}
     void pop_back(){ 
         check(0,"pop_back on empty StrBlob");
         data->pop_back();
@@ -142,10 +149,28 @@ public:
     }
 
     //重载！运算符，使其对StrBlobPtr对象的curr对象进行判断
-    bool operator!=(const StrBlobPtr& p) { return p.curr != curr; }
-    StrBlobPtr& operator+(std::size_t n){curr+=n;return *this;}
-    std::string&operator*(){return deref();}
+    friend bool operator==(const StrBlobPtr&lhs,const StrBlobPtr&rhs);/*{return lhs.curr == rhs.curr; }*/    
+    friend bool operator!=(const StrBlobPtr&lhs,const StrBlobPtr&rhs);/*{ return !(lhs == rhs); } */   
+    friend bool operator<(const StrBlobPtr&lhs,const StrBlobPtr&rhs);/*{return lhs.curr == rhs.curr; }*/    
+    friend bool operator>(const StrBlobPtr&lhs,const StrBlobPtr&rhs);/*{ return !(lhs == rhs); } */   
+    auto& operator[](std::size_t n){   
+        auto ret=check(n," out end of StrBlobPtr");
+        return (*ret)[n];
+    }
+    const auto&operator[](std::size_t n)const{   
+        auto ret=check(n," out begin of StrBlobPtr");
+        return (*ret)[n];
+    }
+
+    // bool operator!=(const StrBlobPtr& p) { return p.curr != curr; }
+    StrBlobPtr& operator+(std::size_t n){curr+=n;check(curr," out end of StrBlobPtr");return *this;}
+    StrBlobPtr& operator-(std::size_t n){curr-=n;check(curr," out begin of StrBlobPtr");return *this;}
+    // std::string&operator*(){return deref();}
     //前缀递增：返回递增后的对象的引用
+    StrBlobPtr&operator++();
+    StrBlobPtr&operator--();
+    StrBlobPtr&operator++(int);
+    StrBlobPtr&operator--(int);
     StrBlobPtr& incr(){
         //如果curr已经指向容器的为尾后位置，就不能递增
         check(curr,"incerement past of StrBlolPte");
@@ -156,7 +181,7 @@ public:
 private:
     //同样有个检查方法,检查指针指向的vector是否还存在,存在则返回该智能指针
     std::shared_ptr<std::vector<std::string>> check(std::size_t i, const std::string & msg) const{
-        auto ret = wptr.lock();//vector是否还有关联
+        auto ret = wptr.lock();//vector是否还有关联,返回shared_ptr
         if(!ret){
             throw std::runtime_error("unbound StrBlobPtr");
         }
@@ -185,6 +210,40 @@ ConstStrBlobPtr StrBlob::cend()const {
         auto ret=ConstStrBlobPtr(*this,data->size());
         return ret;
 }
+bool operator==(StrBlob&rhs,StrBlob&lhs){return(*rhs.data)==(*lhs.data);}
+bool operator!=(StrBlob&rhs,StrBlob&lhs){return !(rhs==lhs);}
+bool operator<(StrBlob&rhs,StrBlob&lhs){return (*rhs.data)<(*lhs.data);}
+bool operator>(StrBlob&rhs,StrBlob&lhs){return (*rhs.data)>(*lhs.data);}
+
+bool operator==(const StrBlobPtr&lhs,const StrBlobPtr&rhs){return lhs.curr == rhs.curr;}    
+bool operator!=(const StrBlobPtr&lhs,const StrBlobPtr&rhs){return !(lhs==rhs);} /*{ return !(lhs == rhs); } */   
+bool operator<(const StrBlobPtr&lhs,const StrBlobPtr&rhs){return lhs.curr<rhs.curr;}/*{return lhs.curr == rhs.curr; }*/    
+bool operator>(const StrBlobPtr&lhs,const StrBlobPtr&rhs){return lhs.curr>rhs.curr;}/*{ return !(lhs == rhs); } */   
+
+StrBlobPtr&StrBlobPtr::operator++()
+{
+    check(curr,"increment past end of StrBlobPtr");
+    ++curr;
+    return *this;
+}
+StrBlobPtr&StrBlobPtr::operator--()
+{
+    --curr;
+    check(curr,"increment past end of StrBlobPtr");
+    return *this;
+}StrBlobPtr&StrBlobPtr::operator++(int)
+{
+    StrBlobPtr ret=*this;
+    ++*this;
+    return ret;
+}
+StrBlobPtr&StrBlobPtr::operator--(int)
+{
+    StrBlobPtr ret=*this;
+    --*this;
+    return ret;
+}
+
 
 // int main()
 // {

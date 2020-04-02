@@ -43,13 +43,22 @@ class HasPtr{
         friend void swap(HasPtr&lhs,HasPtr&rhs);
 
 public:
+    HasPtr(HasPtr&&p)noexcept:ps(p.ps),i(p.i){p.ps=nullptr;}
     HasPtr(const string&s=string()):i(0),ps(new string(s)){}
     HasPtr(const HasPtr&rhs):i(rhs.i),ps(new string(*(rhs.ps))){}
     HasPtr&operator=(HasPtr rhs){
-       puts("operator=");
+       puts("operator=(HasPtr rhs)");
        this->swap(rhs);
         return *this;
     }
+    // HasPtr&operator=(HasPtr&&rhs){
+    //     puts("operator=(HasPtr&&rhs)");
+    //     delete(ps);
+    //     ps=std::move(rhs.ps);
+    //     i=rhs.i;
+    //     rhs.ps=nullptr;
+    //     return *this;
+    // }
     void swap(HasPtr&rhs){
             using std::swap;
             swap(i,rhs.i);

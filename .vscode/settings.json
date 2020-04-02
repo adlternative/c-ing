@@ -42,6 +42,12 @@
         "typeinfo": "cpp",
         "list": "cpp",
         "forward_list": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "unordered_set": "cpp",
+        "cstring": "cpp",
+        "iterator": "cpp",
+        "map": "cpp",
+        "numeric": "cpp",
+        "set": "cpp"
     }
 }

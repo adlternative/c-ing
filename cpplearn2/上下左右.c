@@ -10,9 +10,15 @@
 #define     DOWN    "\033[B"
 #define     LEFT    "\033[D"
 #define     RIGHT   "\033[C"
-
+// typedef struct a{
+//     int a;
+// }A;
+// #define 
 int main()
 {
+    // for(int i=0;i<1000000000000000;i++){
+    //     int* s=malloc(sizeof(int));
+    // }
     char *get = (char*)malloc(SIZE);
 
     for ( ; ; ) 

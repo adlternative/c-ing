@@ -37,8 +37,12 @@ private:
     void add_to_Folders(const Message&);
     void remove_from_Folders();
 public:
+    Message(Message&&m);
+
+    void move_Folders(Message*m);
     explicit Message(const string &str=""):contents(str){}
     Message(const Message&);
+    Message&operator=(Message&&rhs);
     Message&operator=(const Message&);
     ~Message();
     void save(Folder&);
@@ -81,6 +85,26 @@ private:
         }
     }
 };
+void Message::move_Folders(Message*m)
+{
+    //用于之后的移动构造
+    //我感觉这里更像是一种Message替换，也就是
+    //把message  m  的指针从所有包含它的目录删掉，
+    //同时把新Message添加到这些目录中
+    //最后清空m的目录集合
+    folders=std::move(m->folders);
+    
+
+    for(auto f:folders){
+        f->remMsg(m);
+        f->addMsg(this);
+    }
+    m->folders.clear();
+}
+Message::Message(Message&&m):contents(std::move(m.contents))
+{
+    move_Folders(&m);
+}
 void Message::save(Folder&f)
 {
     folders.insert(&f);
@@ -110,6 +134,15 @@ void Message::remove_from_Folders()
 Message::~Message()
 {
     remove_from_Folders();
+}
+Message&Message::operator=(Message&&rhs)
+{
+    if(this!=&rhs){
+        remove_from_Folders();
+        contents=std::move(rhs.contents);
+        move_Folders(&rhs);
+    }
+    return *this;
 }
 
 Message& Message::operator=(const Message&rhs)
