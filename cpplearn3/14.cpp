@@ -28,6 +28,47 @@
 using namespace std;
 using namespace std::placeholders;
 using line_no =vector<string>::size_type;
+class SmallInt{
+    friend SmallInt operator+(const SmallInt&l,const SmallInt&r);
+public:
+    SmallInt(int s=0):val(s){}
+    operator int()const{return val;}
+private:
+    std::size_t val;
+};
+SmallInt operator+(const SmallInt&l,const SmallInt&r)
+{
+    SmallInt sum;
+    sum.val=l.val+r.val;
+    return sum;
+}
+struct LongDouble{
+    LongDouble operator+(const SmallInt&){}
+};
+
+
+class PrintString{
+public:
+    PrintString(ostream &o=cout,char c=' '):os(o),sep(c){}
+    void operator()(const string &s)const {os<<s<<sep;}
+private:
+    ostream &os;
+    char sep;
+};
+class IF_THEN_ELSE{
+public:
+    // IF_THEN_ELSE();
+    int operator()(int a,int b,int c){if(a){return b;}else return c;}
+private:
+};
+class GetString{
+public:
+    GetString(istream&i=cin):is(i){}
+    string operator()(){string str; if(getline(is,str))return str;return string();}
+private:
+    string str;
+    istream &is;
+};
 class Foo{
 public:
     Foo&operator=(const Foo&)&;
@@ -62,6 +103,14 @@ hasY hy,hy2=std::move(hy);
 int f(){return 1;}
 int main()
 {
+    SmallInt si;
+    LongDouble ld;
+    // ld=si+ld;
+    ld=ld+si;
+    double d=static_cast<double>(si)+3.13;
+    auto d=si+static_cast<SmallInt>(3.13);
+    // IF_THEN_ELSE ite;
+    // cout<<ite(1,2,3);
     // string s1="ASD",s2="sad";
     // auto s3=(s1+s2);
     // s1+s2="ssad";
@@ -75,7 +124,13 @@ int main()
     // int &r2=vi[0];
     // int &r3=r1;
     // int &&r4=vi[0]*f();
-    Sales_data s1,s2;
-    cin>>s1>>s2;
-    cout<<s1<<endl<<s2<<endl;
+    GetString gs;
+    vector<string>svec;
+    string ss;
+    while((ss=gs())!=string())
+        svec.push_back(ss);
+    for_each(svec.begin(),svec.end(),PrintString(cout,'\n'));
+    // Sales_data s1,s2;
+    // cin>>s1>>s2;
+    // cout<<s1<<endl<<s2<<endl;
 }

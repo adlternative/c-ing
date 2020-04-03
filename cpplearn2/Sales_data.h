@@ -21,6 +21,9 @@ public:
     explicit Sales_data(std::string s):Sales_data(s,0,0){/*std::cout<<"2\n";*/}
     // Sales_data(const std::string &s):bookNo(s){}
     explicit Sales_data(std::istream&is):Sales_data(){/*std::cout<<"3\n";*/read(is,*this);}
+    explicit operator string()const{return bookNo;}
+    explicit operator double()const {return revenue;}
+    
     // Sales_data(const std::string&s,unsigned n,double p)
     // {
     //     revenue=p*n;

@@ -1,4 +1,4 @@
-#pragma once
+// #pragma once
 #include <iostream>
 #include<fstream>
 #include<sstream>
@@ -104,6 +104,11 @@ public:
 
     //重载！运算符，使其对StrBlobPtr对象的curr对象进行判断
     bool operator!=(const ConstStrBlobPtr& p) { return p.curr != curr; }
+   const string&operator*()const{
+        auto p=check(curr,"dereference past end");
+        return (*p)[curr];
+    }
+    const string*operator->()const{return & this->operator*();}
 
     //前缀递增：返回递增后的对象的引用
     ConstStrBlobPtr& incr(){
@@ -161,7 +166,11 @@ public:
         auto ret=check(n," out begin of StrBlobPtr");
         return (*ret)[n];
     }
-
+    string&operator*()const{
+        auto p=check(curr,"dereference past end");
+        return (*p)[curr];
+    }
+    string*operator->()const{return & this->operator*();}
     // bool operator!=(const StrBlobPtr& p) { return p.curr != curr; }
     StrBlobPtr& operator+(std::size_t n){curr+=n;check(curr," out end of StrBlobPtr");return *this;}
     StrBlobPtr& operator-(std::size_t n){curr-=n;check(curr," out begin of StrBlobPtr");return *this;}
@@ -169,8 +178,9 @@ public:
     //前缀递增：返回递增后的对象的引用
     StrBlobPtr&operator++();
     StrBlobPtr&operator--();
-    StrBlobPtr&operator++(int);
-    StrBlobPtr&operator--(int);
+    StrBlobPtr operator++(int);
+    StrBlobPtr operator--(int);
+    
     StrBlobPtr& incr(){
         //如果curr已经指向容器的为尾后位置，就不能递增
         check(curr,"incerement past of StrBlolPte");
@@ -231,19 +241,27 @@ StrBlobPtr&StrBlobPtr::operator--()
     --curr;
     check(curr,"increment past end of StrBlobPtr");
     return *this;
-}StrBlobPtr&StrBlobPtr::operator++(int)
+}StrBlobPtr StrBlobPtr::operator++(int)
 {
     StrBlobPtr ret=*this;
     ++*this;
     return ret;
 }
-StrBlobPtr&StrBlobPtr::operator--(int)
+StrBlobPtr StrBlobPtr::operator--(int)
 {
     StrBlobPtr ret=*this;
     --*this;
     return ret;
 }
-
+// int main()
+// {
+//     StrBlob a1={"as","ad","dsa"};
+//     StrBlobPtr p(a1);
+//     *p="ok";
+//     // p.operator->()->size;
+//     cout<<p->size()<<endl;
+//     cout<<(*p).size()<<endl;
+// }
 
 // int main()
 // {
