@@ -1,13 +1,15 @@
+
 #include<iostream>
 #include<string>
-using namespace std;
-class Sales_data
-{
+// using namespace std;
+// template<class T>class std::hash;
+
+class Sales_data{
+friend struct std::hash<Sales_data>;
 friend std::ostream&operator<<(std::ostream&os,const Sales_data&item);
 friend std::istream&operator>>(std::istream&is,Sales_data&item);
-friend bool operator==(Sales_data&rhs,Sales_data&lhs);
-friend bool operator!=(Sales_data&rhs,Sales_data&lhs);
-
+friend bool operator ==(const Sales_data&rhs,const Sales_data&lhs);
+friend bool operator!=(const Sales_data&rhs,const Sales_data&lhs);
 friend std::ostream&print(std::ostream&os,const Sales_data&item);
 friend std::istream&read(std::istream&is,Sales_data&item);
 friend Sales_data add(const Sales_data&lhs,const Sales_data&rhs);
@@ -21,10 +23,10 @@ public:
     explicit Sales_data(std::string s):Sales_data(s,0,0){/*std::cout<<"2\n";*/}
     // Sales_data(const std::string &s):bookNo(s){}
     explicit Sales_data(std::istream&is):Sales_data(){/*std::cout<<"3\n";*/read(is,*this);}
-    explicit operator string()const{return bookNo;}
+    // explicit operator std::string()const{return bookNo;}
     explicit operator double()const {return revenue;}
     
-    // Sales_data(const std::string&s,unsigned n,double p)
+    // Sales_data(const string&s,unsigned n,double p)
     // {
     //     revenue=p*n;
     //     bookNo=s;
@@ -37,7 +39,7 @@ private:
     double avg_price()const;
     double revenue=0.0;
     unsigned units_sold=0;
-    string bookNo;
+    std::string bookNo;
 };
 Sales_data&Sales_data::operator+=(const Sales_data&rhs)
 {
@@ -45,11 +47,11 @@ Sales_data&Sales_data::operator+=(const Sales_data&rhs)
     revenue+=rhs.revenue;
     return *this;
 }
-bool operator==(Sales_data&rhs,Sales_data&lhs)
+bool operator==(const Sales_data&rhs,const Sales_data&lhs)
 {
     return lhs.isbn()==rhs.isbn()&&lhs.units_sold==rhs.units_sold&&lhs.revenue==rhs.revenue;
 }
-bool operator!=(Sales_data&rhs,Sales_data&lhs)
+bool operator!=(const Sales_data&rhs,const Sales_data&lhs)
 {
     // return lhs.isbn()!=rhs.isbn()||lhs.units_sold!=rhs.units_sold||lhs.revenue==rhs.revenue;
     return !(rhs==lhs);
@@ -109,7 +111,21 @@ std::istream&operator>>(std::istream&is,Sales_data&item)
         item=Sales_data();
     return is;
 }
-
+namespace std{
+    template<>
+    struct hash<Sales_data>
+    {
+        typedef size_t result_type;
+        typedef Sales_data argument_type;
+        size_t operator()(const Sales_data&s)const;
+    };
+    size_t hash<Sales_data>::operator()(const Sales_data&s)const
+    {
+        return hash<string>()(s.bookNo)^
+        hash<unsigned>()(s.units_sold)^
+        hash<double>()(s.revenue);
+    }
+}
 
 
 

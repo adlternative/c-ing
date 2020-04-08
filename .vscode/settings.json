@@ -48,6 +48,7 @@
         "iterator": "cpp",
         "map": "cpp",
         "numeric": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "cassert": "cpp"
     }
 }

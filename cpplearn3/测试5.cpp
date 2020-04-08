@@ -193,6 +193,7 @@ private:
     std::shared_ptr<std::vector<std::string>> check(std::size_t i, const std::string & msg) const{
         auto ret = wptr.lock();//vector是否还有关联,返回shared_ptr
         if(!ret){
+            // auto s=ret.get();
             throw std::runtime_error("unbound StrBlobPtr");
         }
         if(i>=ret->size()){

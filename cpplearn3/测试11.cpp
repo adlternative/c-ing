@@ -43,6 +43,12 @@ private:
     string*first_free;
     string*cap;
 public:
+    template<class...Args>
+    inline void emplace_back(Args&&...args)
+    {
+        chk_n_alloc();
+        alloc.construct(first_free++,std::forward<Args>(args)...);
+    }
     void reserve(string::size_type);
     void resize(string::size_type);
     StrVec():elements(nullptr),first_free(nullptr),cap(nullptr){}
