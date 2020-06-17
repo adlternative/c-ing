@@ -49,6 +49,7 @@
         "map": "cpp",
         "numeric": "cpp",
         "set": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "regex": "cpp"
     }
 }

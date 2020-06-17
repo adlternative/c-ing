@@ -28,6 +28,6 @@ int a()
 int main(int argc,char**argv)
 {
     int a;
-    a();
+    // a();
     return 0;
 }
