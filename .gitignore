@@ -1,4 +1,12 @@
-a.out
-*.o
-*.s
-*.i
+*
+!**/
+!*.cpp
+!*.c
+!*.cc
+!*.h
+!*.txt
+!makefile
+!*.md
+!*.hpp
+!*.hpp
+!.gitignore
