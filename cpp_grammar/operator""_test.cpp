@@ -20,6 +20,13 @@ constexpr long double operator"" s(long double __secs) { return 2 * __secs; }
 //   return radians;
 // }
 
+constexpr unsigned long long operator"" _kk(unsigned long long a) {
+  // std::cout << "bb" << std::endl;
+  return 1;
+}
+
+// int main(int argc, char **argv) { unsigned long long a = 3333_kk; }
+
 int main(int argc, char **argv) {
   double x_rad = 90.2s;
   // long double x = 2_deg_to_rad;
