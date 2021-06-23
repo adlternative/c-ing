@@ -27,6 +27,18 @@ public:
   }
 };
 
+struct C : private A {
+public:
+  void func() {
+    int a1 = a;
+    int b1 = b;
+    /* int c1 = c; // err */
+    funca();
+    funcb();
+    /* funcc(); //err */
+  }
+};
+
 using namespace std;
 int main(int argc, char **argv) {
   B b;
@@ -34,5 +46,8 @@ int main(int argc, char **argv) {
   b.funca();
   // b.funcb();
   // b.funcc();
+  C c;
+  c.func();
+  /* c.funca(); */
 
 }
