@@ -173,9 +173,8 @@ public:
     /* 从 init 恢复协程（协程马上调用 await 返回并等待值） */
     assert(h.next());
   }
-
-  std::tuple<status, std::string::iterator> parse(std::string::iterator begin,
-                                                  std::string::iterator end) {
+  template <typename Iterator>
+  std::tuple<status, Iterator> parse(Iterator begin, Iterator end) {
     running = true;
     while (begin != end) {
       std::cout << *begin << std::endl;
@@ -191,10 +190,8 @@ public:
     return std::make_tuple(indeterminate, begin);
   }
   void handle(std::string src) {
-    status sta;
-    std::string::iterator i;
-
-    std::tie(sta, i) = parse(src.begin(), src.end());
+    // status sta;
+    auto [sta, i] = parse(src.begin(), src.end());
     if (sta == ok) {
       std::cout << req_ << std::endl;
       req_.clear();
