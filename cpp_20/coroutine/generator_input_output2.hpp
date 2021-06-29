@@ -19,6 +19,8 @@
  *
  * @tparam OutputType 输出类型
  * @tparam InputType 输入类型
+ * 我们可以通过 x = co_await generator<T>::generator_input{} 和 x= co_yield xxx;
+ * 来从外界拿值。
  */
 template <typename OutputType, typename InputType> struct generator {
   struct promise_type;
