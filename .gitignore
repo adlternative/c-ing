@@ -10,3 +10,4 @@
 !*.hpp
 !*.hpp
 !.gitignore
+!*.proto
