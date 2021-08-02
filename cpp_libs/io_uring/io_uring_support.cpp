@@ -84,7 +84,11 @@ static const char *op_strs[] = {
     "IORING_OP_REMOVE_BUFFERS",
 };
 
+#define X1(format, something) printf(#something "=" #format "\n", something)
+
 int main() {
+  X1("%lu", sizeof(struct io_uring_sqe));
+  // printf("sizeof(struct io_uring_sqe) = %lu\n", sizeof(struct io_uring_sqe));
   struct utsname u;
   uname(&u);
   printf("You are running kernel version: %s\n", u.release);
