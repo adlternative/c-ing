@@ -14,7 +14,7 @@ private:
   void funcc() {}
 };
 
-/* 默认公有继承，A的私有成员将无法访问 */
+/* 默认私有继承，A的私有成员将无法访问 */
 struct B : A {
 public:
   void func() {
