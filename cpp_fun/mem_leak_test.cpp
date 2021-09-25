@@ -10,6 +10,8 @@ void malloc_no_free() {
   use = (int *)malloc(sizeof(int));
   *use = 1;
   printf("%d\n", *use);
+  free(use);
+  printf("hsakljkdaskldasjkln\n");
   use = NULL;
 }
 
@@ -28,5 +30,6 @@ int main(int argc, char **argv) {
   // int *ret = malloc_zero();
   // printf("%d\n", ret[3000]);
   malloc_no_free();
+  printf("bye\n");
   return 0;
 }

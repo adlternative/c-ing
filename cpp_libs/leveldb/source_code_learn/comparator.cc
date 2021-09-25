@@ -50,5 +50,14 @@ using namespace std;
 int main(int argc, char **argv) {
   std::string s("gggee");
   FindShortSuccessor(&s);
-  std::cout << s << std::endl;
+  s.clear();
+  char mem[10];
+  memset(mem, 0xff, sizeof(mem));
+  s.append(mem, 10);
+  s[3] = 66;
+  FindShortSuccessor(&s);
+  for (size_t i = 0; i < 10; i++) {
+    std::cout << s[i] - 0xff << std::endl;
+  }
+  std::cout << 66 - 0xff << std::endl;
 }

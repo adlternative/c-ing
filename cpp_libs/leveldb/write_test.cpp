@@ -1,3 +1,4 @@
+#include <bits/stdc++.h> /* 万能头 */
 #include <cassert>
 #include <iostream>
 #include <leveldb/db.h>
@@ -6,11 +7,14 @@ int main() {
   leveldb::DB *db;
   leveldb::Options options;
   options.create_if_missing = true;
-  leveldb::Status status = leveldb::DB::Open(options, "/tmp/testdb", &db);
+  leveldb::Status status = leveldb::DB::Open(options, "./db", &db);
   assert(status.ok());
 
   std::cout << "leveldb open success!" << std::endl;
-
+  for (uint32_t v = 0; v < 20000; v++) {
+    db->Put(leveldb::WriteOptions(), std::to_string(rand()),
+            std::to_string(rand()));
+  }
   std::string value;
   std::string key1 = "testkey1";
   leveldb::Status s = db->Get(leveldb::ReadOptions(), key1, &value);
