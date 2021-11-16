@@ -11,3 +11,7 @@
 !*.hpp
 !.gitignore
 !*.proto
+!*.y
+!*.lex
+!*.yacc
+!*.lt
