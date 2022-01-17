@@ -1,7 +1,9 @@
+#include <gtest/gtest.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
+
 using namespace std;
 
 #include <openssl/sha.h>
@@ -20,10 +22,24 @@ string sha256(const string str) {
   return ss.str();
 }
 
-int main() {
+void hex_to_sha256_digit(string_view hex, unsigned char *hash) {
+  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+    hash[i] = (unsigned char)stoi(string(hex.substr(2 * i, 2)), nullptr, 16);
+  }
+}
 
+TEST(sha256, sha256) {
   cout << sha256("test") << endl;
-  cout << sha256("test2") << endl;
 
-  return 0;
+  cout << sha256("test2") << endl;
+}
+
+TEST(sha256, sha256hex_to_sha256_digit) {
+  unsigned char sha256_digit_[SHA256_DIGEST_LENGTH];
+
+  hex_to_sha256_digit(
+      "7e0f4af9e448d1450f4c405ba5d978275cccacfe7c57746a5a0bd65d27d45644",
+      sha256_digit_);
+  EXPECT_EQ(sha256_digit_[0], 0x7e);
+  EXPECT_EQ(sha256_digit_[1], 0x0f);
 }

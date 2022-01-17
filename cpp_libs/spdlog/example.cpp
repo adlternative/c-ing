@@ -19,7 +19,7 @@ int main() {
   spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
 
   // Compile time log levels
-  // define SPDLOG_ACTIVE_LEVEL to desired level
+  // define SPDLOG_ACTIVE_LEVEL to desired levewl
   SPDLOG_TRACE("Some trace message with param {}", 42);
   SPDLOG_DEBUG("Some debug message");
 }

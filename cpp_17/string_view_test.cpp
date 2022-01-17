@@ -72,3 +72,8 @@ TEST(string_view, string2) {
   }
   std::cout << "\", one_two_v.size(): " << one_two_v.size() << '\n';
 }
+
+TEST(string_view, string3) {
+  std::string s("abc");
+  std::string_view view(s);
+}
