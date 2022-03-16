@@ -17,6 +17,15 @@ public:
   }
 };
 
+class D3 : public B {
+public:
+  void show() { cout << "D1 show" << endl; }
+  D3() {
+    std::cout << "D1" << std::endl;
+    show();
+  }
+};
+
 class D1 : virtual public B {
 public:
   void show() { cout << "D1 show" << endl; }
@@ -44,13 +53,23 @@ public:
   }
 };
 
+class K2 {};
+class K3 : public K2 {};
+class K4 : public K2 {
+  int k;
+};
+
 int main() {
-  DD d;
-  KK k;
-  std::cout << sizeof(K) << std::endl;
-  std::cout << sizeof(KK) << std::endl;
-  std::cout << sizeof(B) << std::endl;
-  std::cout << sizeof(D1) << std::endl;
-  std::cout << sizeof(D2) << std::endl;
-  std::cout << sizeof(DD) << std::endl;
+  // DD d;
+  // KK k;
+  // D3 d3;
+  std::cout << sizeof(K2) << std::endl;
+  std::cout << sizeof(K3) << std::endl;
+  std::cout << sizeof(K4) << std::endl;
+  // std::cout << sizeof(K) << std::endl;
+  // std::cout << sizeof(KK) << std::endl;
+  // std::cout << sizeof(B) << std::endl;
+  // std::cout << sizeof(D1) << std::endl;
+  // std::cout << sizeof(D2) << std::endl;
+  // std::cout << sizeof(DD) << std::endl;
 }

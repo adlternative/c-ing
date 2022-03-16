@@ -69,7 +69,7 @@ TEST(bp, t2) {
 
 TEST(bp, t3) {
   vector<int> v;
-  for (int i = 0; i < 10000000; i++)
+  for (int i = 0; i < 100000000; i++)
     v.push_back(rand() % 10000);
   Timer([&]() {
     int lens = v.size();
@@ -84,7 +84,7 @@ TEST(bp, t3) {
 
 TEST(bp, t4) {
   vector<int> v;
-  for (int i = 0; i < 10000000; i++)
+  for (int i = 0; i < 100000000; i++)
     v.push_back(rand() % 10000);
   Timer([&]() {
     int lens = v.size();
@@ -99,13 +99,58 @@ TEST(bp, t4) {
 
 TEST(bp, t5) {
   vector<int> v;
-  for (int i = 0; i < 10000000; i++)
+  for (int i = 0; i < 100000000; i++)
     v.push_back(rand() % 10000);
   Timer([&]() {
     int lens = v.size();
     int count = 0;
     for (int i = 0; i < lens; i++) {
       if (v[i] > 10000) {
+        count++;
+      }
+    }
+  })(cout);
+}
+
+TEST(bp, t6) {
+  vector<int> v;
+  for (int i = 0; i < 100000000; i++)
+    v.push_back(i);
+  Timer([&]() {
+    int lens = v.size();
+    int count = 0;
+    for (int i = 0; i < lens; i++) {
+      if (v[i] == 50000000) [[unlikely]] {
+        count++;
+      }
+    }
+  })(cout);
+}
+
+TEST(bp, t7) {
+  vector<int> v;
+  for (int i = 0; i < 100000000; i++)
+    v.push_back(i);
+  Timer([&]() {
+    int lens = v.size();
+    int count = 0;
+    for (int i = 0; i < lens; i++) {
+      if (v[i] == 50000000) [[likely]] {
+        count++;
+      }
+    }
+  })(cout);
+}
+
+TEST(bp, t8) {
+  vector<int> v;
+  for (int i = 0; i < 100000000; i++)
+    v.push_back(i);
+  Timer([&]() {
+    int lens = v.size();
+    int count = 0;
+    for (int i = 0; i < lens; i++) {
+      if (v[i] == 50000000) {
         count++;
       }
     }
